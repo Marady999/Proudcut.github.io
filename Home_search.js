@@ -1,4 +1,4 @@
-export const products=[
+const products=[
     {
         id:1,
         image:'https://www.naturalmedicine.ie/pub/media/catalog/product/cache/c323d2da89816a886fb5d0add5886889/m/e/mens_face_wash.png', 
@@ -142,5 +142,58 @@ export const products=[
         views:47,
         size:'50ml',
         color:'brown , White',
-    },
+    },   
 ];
+
+
+// Parse Query Parameters
+function getQueryParams() {
+  const params = new URLSearchParams(window.location.search);
+  return params.get('query') || '';
+}
+
+// Filter Products
+function filterProducts(query) {
+  const lowerCaseQuery = query.toLowerCase();
+  return products.filter(product =>
+    product.title.toLowerCase().includes(lowerCaseQuery) ||
+    product.category.toLowerCase().includes(lowerCaseQuery)
+  );
+}
+
+// Render Products
+function renderProducts(productList) {
+  const container = document.getElementById('searchResults');
+  container.innerHTML = '';
+
+  if (productList.length === 0) {
+    container.innerHTML = '<p class="text-center">No products found.</p>';
+    return;
+  }
+
+  productList.forEach(product => {
+    const card = `
+      <div class="col-6 col-md-3">
+        <div class="card">
+          <img src="${product.image}" class="card-img-top" alt="${product.title}">
+          <div class="card-body">
+            <h5 class="card-title">${product.title}</h5>
+            <p class="card-text">US ${product.sale_price}</p>
+          </div>
+        </div>
+      </div>
+    `;
+    container.innerHTML += card;
+  });
+}
+
+// On Page Load
+document.addEventListener('DOMContentLoaded', () => {
+  const query = getQueryParams();
+  const filteredProducts = filterProducts(query);
+  renderProducts(filteredProducts);
+});
+
+
+
+
